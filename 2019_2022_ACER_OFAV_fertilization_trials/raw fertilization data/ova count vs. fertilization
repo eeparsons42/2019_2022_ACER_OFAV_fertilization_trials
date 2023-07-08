@@ -1,0 +1,47 @@
+---
+title: "number of ova vs. fertilization"
+author: "Emily Parsons"
+date: "2022-10-09"
+output: html_document
+---
+
+1. 2019 Night 1
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/2019night1ova.csv")
+xyplot(fert~num_ova,data=dat,type=c("p","r"), main = "2019 Night 1: Ova # vs. Fertilization Success", xlab="Ova Count", ylab="Fertilization")
+m <- lm(fert~num_ova,data=dat)
+summary(m)
+anova(m)
+```
+
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/2019night2ova.csv")
+xyplot(fert~num_ova,data=dat,type=c("p","r"), main = "2019 Night 2: Ova # vs. Fertilization Success", xlab="Ova Count", ylab="Fertilization")
+m <- lm(fert~num_ova,data=dat)
+summary(m)
+anova(m)
+```
+
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/2022night1ova.csv")
+xyplot(fert~num_ova,data=dat,type=c("p","r"), main = "Ova # vs. Fertilization Success", xlab="Ova Count", ylab="Fertilization")
+m <- lm(fert~num_ova,data=dat)
+summary(m)
+anova(m)
+```
+
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/2022night2ova.csv")
+xyplot(fert~num_ova,data=dat,type=c("p","r"), main = "2022 Night 2: Ova # vs. Fertilization Success", xlab="Ova Count", ylab="Fertilization")
+m <- lm(fert~num_ova,data=dat)
+summary(m)
+anova(m)
+```

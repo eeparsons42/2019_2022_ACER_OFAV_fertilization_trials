@@ -1,0 +1,240 @@
+---
+title: "total fertilization plots"
+author: "Emily Parsons"
+date: "2022-11-01"
+output: html_document
+---
+
+```{r}
+install.packages("tidyverse")
+install.packages("hrbrthemes")
+install.packages("viridis")
+```
+
+
+
+```{r}
+library(ggplot2)
+library(car)
+library(e1071)
+library(lattice)
+library(mdthemes)
+library(tidyverse)
+library(hrbrthemes)
+library(viridis)
+```
+
+
+```{r}
+data1 <- read.csv("C:/Users/parsonsee/Desktop/r_data/alloutcross_new.csv")
+```
+
+
+```{r}
+data3 <- read.csv("C:/Users/parsonsee/Desktop/r_data/alloutcross2.csv")
+data4 <- read.csv("C:/Users/parsonsee/Desktop/r_data/allself.csv")
+```
+
+```{r}
+data5 <- read.csv("C:/Users/parsonsee/Desktop/alloutcross.csv")
+data6 <- read.csv("C:/Users/parsonsee/Desktop/allself.csv")
+data9 <- read.csv("C:/Users/parsonsee/Desktop/acertotalself_nooutliers.csv")
+```
+```{r}
+data10 <- read.csv("C:/Users/parsonsee/Desktop/ofavtotalself_nooutliers.csv")
+```
+```{r}
+data11 <- read.csv("C:/Users/parsonsee/Desktop/r_data/ofav3clones.csv")
+```
+```{r}
+data11 <- read.csv("C:/Users/parsonsee/Desktop/r_data/alloutcross_new.csv")
+```
+
+
+Boxplot - All data both species
+
+```{r}
+ggplot(data1, aes(y=fert, fill=Species, x=Night)) +
+geom_boxplot()+ 
+  scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+    
+    theme_ipsum() +
+    theme(
+      legend.position="none",
+      plot.title = element_text(size=11)
+    )+
+  ylim(0, 35) +
+  mdthemes::md_theme_classic() +
+  labs(title= "All Self-Crosses Per Night", x="Species", y="Fertilization")
+```
+```{r}
+ggplot(data1, aes(x=Night, y=fert, fill=Species)) +
+geom_boxplot()+ 
+  scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+
+  
+    theme_ipsum() +
+    theme(
+      legend.position="none",
+      plot.title = element_text(size=11)
+    )+
+  ylim(0, 35) +
+  mdthemes::md_theme_classic() +
+  labs(title= "All Outcrosses per Night", x="Night", y="Fertilization")+
+scale_x_discrete(limits=c("8/22/2019","8/23/2019","8/13/2022", "8/15/2022", "8/17/2022"))
+```
+
+```{r}
+ggplot(data11, aes(x=Night, y=fert, fill=Species)) +
+geom_violin()+ 
+  scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+    geom_jitter(color="black", size=0.4, alpha=0.9) +
+    theme_ipsum() +
+    theme(
+      legend.position="none",
+      plot.title = element_text(size=11)
+    )+
+  ylim(0, 35) +
+  mdthemes::md_theme_classic() +
+  labs(title= "All Outcrosses per Night", x="Night", y="Fertilization")+
+scale_x_discrete(limits=c("8/22/2019","8/23/2019","8/13/2022", "8/15/2022", "8/17/2022"))
+```
+
+```{r}
+ggplot(data3, aes(x=Species, y=fert, fill=Species)) +
+geom_boxplot()+ 
+  ylim(0, 100) +
+  scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+  
+    theme_ipsum() +
+    theme(
+      legend.position="none",
+      plot.title = element_text(size=20)
+    )+
+  mdthemes::md_theme_classic() +
+  labs(title= "*A. cervicornis* and *O. faveolata* - Outcrosses per Year", x="Year", y="Fertilization")
+```
+
+
+
+
+
+```{r}
+ggplot(data1, aes(x=Night, y=fert, color=Night)) +
+geom_boxplot() +
+  ylim(0, 10)+
+  scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+    geom_jitter(color="black", size=0.4, alpha=0.9) +
+    theme_ipsum() +
+    theme(
+      legend.position="none",
+      plot.title = element_text(size=11)
+    )+
+  mdthemes::md_theme_classic() +
+  labs(title= "Violin Plot: *O.faveolata* Self-Crosses - All Nights: No 2022 Clones", x="Night", y="Fertilization (n=3)") +
+  scale_fill_manual(values=c("#CCFF66", "#99CC33"))+
+  scale_x_discrete(limits=c("8/22/2019","8/23/2019","8/17/2022"))
+         
+```
+
+
+```{r}
+ggplot(data3, aes(x=Year, y=fert)) +
+geom_boxplot()+ 
+  ylim(0, 100) +
+  mdthemes::md_theme_classic() +
+  labs(title= "*O.faveolata* Self Crosses - All Nights", x="Year", y="Fertilization (n=3)")
+```
+
+ 
+ 
+ 
+ scale_fill_manual(values=c("#FFFFFF", "#CCCCCC"))+
+  scale_x_discrete(limits=c("8/22/2019","8/23/2019","8/17/2022"))
+
+
+```{r}
+ggplot(data4, aes(x=Night, y=fert, fill=Year)) +
+geom_boxplot()+ 
+  ylim(0, 100) +
+  mdthemes::md_theme_classic() +
+  labs(title= "*O.faveolata* Self Crosses - All Nights", x="Night", y="Fertilization (n=3)")+
+  scale_fill_manual(values=c("#CCFF66", "#99CC33"))+
+  scale_x_discrete(limits=c("8/22/2019","8/23/2019","8/17/2022"))
+```
+```{r}
+ggplot(data5, aes(x=Year, y=fert, fill=Species)) +
+geom_boxplot()+ 
+  ylim(0, 100) +
+  mdthemes::md_theme_classic() +
+  labs(title= "Yearly Average per Species - Outcrosses", x="Species", y="Fertilization (n=3)")+
+  scale_fill_manual(values=c("#CC9999", "#CC9933"))
+```
+
+
+
+```{r}
+ggplot(data5, aes(x=Night, y=fert, fill=Species)) +
+geom_boxplot()+ 
+  ylim(0, 100) +
+  mdthemes::md_theme_classic() +
+  labs(title= "Outcrosses", x="Night", y="Fertilization (n=3)")+
+  scale_x_discrete(limits=c("8/22/2019","8/23/2019","8/13/2022", "8/15/2022", "8/17/2022"))+
+  scale_fill_manual(values=c("#CC9999", "#CC9933"))
+```
+```{r}
+ggplot(data5, aes(fill=Species, y=fert,)) +
+geom_boxplot()+ 
+  ylim(0, 100) +
+  mdthemes::md_theme_classic() +
+  labs(title= "Total Outcross Averages Per Species", x="Species", y="Fertilization (n=3)")+
+  scale_fill_manual(values=c("#CC9999", "#CC9933")) 
+                    
+```
+
+```{r}
+ggplot(data6, aes(x=Year, y=fert, fill=Species)) +
+geom_boxplot()+ 
+  ylim(0, 100) +
+  mdthemes::md_theme_classic() +
+  labs(title= "A.cervicornis and O.faveolata Self Cross Averages Per Year", x="Year", y="Fertilization")
+  scale_x_discrete(limits=c("8/22/2019","8/23/2019","8/13/2022", "8/15/2022", "8/17/2022"))+
+  scale_fill_manual(values=c("#CC9999", "#CC9933"))
+```
+
+```{r}
+ggplot(data6, aes(y=fert, fill=species)) +
+geom_boxplot()+ 
+  ylim(0, 100) +
+  mdthemes::md_theme_classic() +
+  labs(title= "Total Self Cross Averages Per Species", x="Species", y="Fertilization (n=3)")+
+  scale_fill_manual(values=c("#CC9999", "#CC9933"))
+```
+```{r}
+data7 <- read.csv("C:/Users/parsonsee/Desktop/alloutcross2.csv")
+```
+
+
+```{r}
+ggplot(data7, aes(x=Night, y=fert, fill=Species)) +
+geom_boxplot()+ 
+  ylim(0, 100) +
+  mdthemes::md_theme_classic() +
+  labs(title= "Outcrosses", x="Night", y="Fertilization")+
+  scale_x_discrete(limits=c("8/22/2019","8/23/2019","8/13/2022", "8/15/2022", "8/17/2022"))+
+  scale_fill_manual(values=c("#CC9999", "#CC9933"))
+```
+
+```{r}
+ggplot(data6, aes(x=species, y=fert)) +
+geom_boxplot()+ 
+  ylim(0, 100) +
+  mdthemes::md_theme_classic() +
+  labs(title= "*A.cervicornis* and *O.faveolata* Self Crosses - All Nights", x="Species", y="Fertilization")+
+  scale_fill_manual(values=c("#FFFFFF", "#CCCCCC"))+
+  scale_x_discrete(labels=c("ACER" = "*A.cervicornis* Self Crosses (n=28)", "OFAV" = "*O.faveolata* Self Crosses (n=20)"))
+  
+```
+
+
+

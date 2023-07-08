@@ -1,0 +1,260 @@
+---
+title: "Regional Analysis"
+output:
+  pdf_document: default
+  html_document: default
+date: "2022-10-06"
+---
+
+
+I. Night 1 - All data 
+
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/acer1_miles2.csv")
+
+
+dat$parent1 <- unlist(lapply(strsplit(dat$cross,"-"),"[[",1))
+dat$parent2 <- unlist(lapply(strsplit(dat$cross,"-"),"[[",2))
+
+
+xyplot(fert~mi,data=dat,type=c("p","r"), main = "2022 Night 1 - Distance (mi) vs. Fertilization")
+m <- lm(fert~mi_sqrt,data=dat)
+summary(m)
+anova(m)
+```
+
+```{r}
+
+m <- lm(fert~parent1,data=dat)
+anova(m)
+```
+
+
+
+```{r}
+m <- lm(fert~parent2,data=dat)
+anova(m)
+```
+
+II. Directionality by Region
+
+
+
+
+1. Upper Keys Crosses 
+
+i. Sperm 
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/region/night1/u_2022night1.csv")
+m <- lm(fert_s~miles,data=dat)
+anova(m)
+```
+
+ii. Ova 
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/region/night1/u_2022night1.csv")
+m <- lm(fert_o~miles,data=dat)
+anova(m)
+```
+
+```{r}
+dat <- read.csv("C:/Users/parsonsee/Desktop/region/night1/2u_2022night1.csv")
+library(ggplot2)
+ggplot(dat, aes(x=miles, y=fert_s, col=dir)) + geom_point() + ggtitle("Upper Keys Crosses") +
+  xlab("Miles") + ylab("Fertilization") + coord_cartesian(xlim = c(0, 90), ylim = c(0, 100)) +
+            geom_smooth(method="lm", se=FALSE)
+```
+
+2. Middle Keys Crosses 
+
+i. Sperm 
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/region/night1/m_2022night1.csv")
+m <- lm(fert_s~miles,data=dat)
+anova(m)
+```
+
+ii. Ova 
+```{r}
+m <- lm(fert_o~miles,data=dat)
+anova(m)
+```
+
+```{r}
+dat <- read.csv("C:/Users/parsonsee/Desktop/region/night1/2m_2022night1.csv")
+library(ggplot2)
+ggplot(dat, aes(x=miles, y=fert_s, col=dir)) + geom_point() + ggtitle("Middle Keys Crosses") +
+  xlab("Miles") + ylab("Fertilization") + coord_cartesian(xlim = c(0, 90), ylim = c(0, 100)) +
+            geom_smooth(method="lm", se=FALSE)
+```
+
+3. Lower Keys Crosses 
+
+i. Sperm
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/region/night1/l_2022night1.csv")
+m <- lm(fert_s~miles,data=dat)
+anova(m)
+```
+
+ii.Ova
+```{r}
+m <- lm(fert_o~miles,data=dat)
+anova(m)
+```
+
+```{r}
+dat <- read.csv("C:/Users/parsonsee/Desktop/region/night1/2l_2022night1.csv")
+library(ggplot2)
+ggplot(dat, aes(x=miles, y=fert_s, col=dir)) + geom_point() + ggtitle("Lower Keys Crosses") +
+  xlab("Miles") + ylab("Fertilization") + coord_cartesian(xlim = c(0, 90), ylim = c(0, 100)) +
+            geom_smooth(method="lm", se=FALSE)
+```
+
+II. Night 2 - All data 
+
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/region/night2/2022night2dist.csv")
+
+dat$parent1 <- unlist(lapply(strsplit(dat$cross,"-"),"[[",1))
+dat$parent2 <- unlist(lapply(strsplit(dat$cross,"-"),"[[",2))
+
+xyplot(fert~miles,data=dat,type=c("p","r"), main = "2022 Night 2 - Distance (mi) vs. Fertilization", xlab = "Miles", ylab = "Fertilization")
+m <- lm(fert~miles,data=dat)
+summary(m)
+anova(m)
+```
+
+```{r}
+
+m <- lm(fert~parent1,data=dat)
+anova(m)
+```
+
+
+
+```{r}
+m <- lm(fert~parent2,data=dat)
+anova(m)
+```
+
+
+IV. Night 2 - Directionality by Region 
+
+
+1. Upper Keys crosses
+
+i. Sperm
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/region/night2/u_2022night2.csv")
+m <- lm(fert_s~miles,data=dat)
+anova(m)
+```
+
+ii. Ova
+```{r}
+m <- lm(fert_o~miles,data=dat)
+anova(m)
+```
+
+
+```{r}
+dat <- read.csv("C:/Users/parsonsee/Desktop/region/night2/2u_2022night2.csv")
+library(ggplot2)
+ggplot(dat, aes(x=miles, y=fert_s, col=dir)) + geom_point() + ggtitle("Upper Keys Crosses") +
+  xlab("Miles") + ylab("Fertilization") + coord_cartesian(xlim = c(0, 160), ylim = c(0, 100)) +
+            geom_smooth(method="lm", se=FALSE)
+```
+
+2. Broward County crosses 
+
+i. Sperm 
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/region/night2/b_2022night2.csv")
+m <- lm(fert_s~miles,data=dat)
+anova(m)
+```
+
+
+
+ii. Ova
+```{r}
+m <- lm(fert_o~miles,data=dat)
+anova(m)
+```
+
+```{r}
+dat <- read.csv("C:/Users/parsonsee/Desktop/region/night2/2b_2022night2.csv")
+library(ggplot2)
+ggplot(dat, aes(x=miles, y=fert, col=dir)) + geom_point() + ggtitle("Broward County Crosses") +
+  xlab("Miles") + ylab("Fertilization") + coord_cartesian(xlim = c(0, 160), ylim = c(0, 100)) +
+            geom_smooth(method="lm", se=FALSE)
+```
+
+3. Lower Keys crosses 
+
+i. Sperm 
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/region/night2/l_2022night2.csv")
+m <- lm(fert_s~miles,data=dat)
+anova(m)
+```
+
+ii. Ova
+```{r}
+m <- lm(fert_o~miles,data=dat)
+anova(m)
+```
+
+
+```{r}
+dat <- read.csv("C:/Users/parsonsee/Desktop/region/night2/2l_2022night2.csv")
+library(ggplot2)
+ggplot(dat, aes(x=miles, y=fert, col=dir)) + geom_point() + ggtitle("Lower Keys Crosses") +
+  xlab("Miles") + ylab("Fertilization") + coord_cartesian(xlim = c(0, 160), ylim = c(0, 100)) +
+            geom_smooth(method="lm", se=FALSE)
+```
+
+4. Middle Keys 
+
+i. Sperm 
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/region/night2/m_2022night2.csv")
+m <- lm(fert_s~miles,data=dat)
+anova(m)
+```
+
+ii. Ova
+```{r}
+m <- lm(fert_o~miles,data=dat)
+anova(m)
+```
+
+
+```{r}
+dat <- read.csv("C:/Users/parsonsee/Desktop/region/night2/2m_2022night2.csv")
+library(ggplot2)
+ggplot(dat, aes(x=miles, y=fert, col=dir)) + geom_point() + ggtitle("Middle Keys Crosses") +
+  xlab("Miles") + ylab("Fertilization") + coord_cartesian(xlim = c(0, 160), ylim = c(0, 100)) +
+            geom_smooth(method="lm", se=FALSE)
+```

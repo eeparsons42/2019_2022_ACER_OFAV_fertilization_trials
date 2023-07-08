@@ -1,0 +1,379 @@
+---
+title: "time vs. fert"
+author: "Emily Parsons"
+date: "9/26/2022"
+output: html_document
+---
+
+1. Age vs. Fertilization - all replicates no corrections
+
+i. 2019 Night 1
+
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/r_data/ofav1time.csv")
+xyplot(fert~time,data=dat,type=c("p","r"), main = "OFAV 2019 Night 1: Time vs. Fert - SQ corrected avg (n=3)", xlab="Time Ova Added to Sperm", ylab="Fert Avg (n=3): Square Corrected")
+m <- lm(fert_sq~time,data=dat)
+anova(m)
+```
+```{r}
+summary(m)
+```
+
+
+
+
+ii. 2019 Night 2
+
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/ofav2time.csv")
+xyplot(fert_sq~time,data=dat,type=c("p","r"), main = "OFAV 2019 Night 2: Time vs. Fert - SQ corrected avg (n=3)", xlab="Time Ova Added to Sperm", ylab="Fert Avg (n=3): Square Corrected")
+m <- lm(fert_sq~time,data=dat)
+anova(m)
+```
+```{r}
+summary(m)
+```
+
+iii. 2022 Night 1
+
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/ofav4time.csv")
+xyplot(fert_sq~time,data=dat,type=c("p","r"), main = "OFAV 2022: Time vs. Fert - SQ corrected avg (n=3)", xlab="Time Ova Added to Sperm", ylab="Fert Avg (n=3): Square Corrected")
+m <- lm(fert_sq~time,data=dat)
+anova(m)
+```
+
+```{r}
+summary(m)
+```
+
+iv. 2022 Night 2
+
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/ofavtimeall.csv")
+xyplot(fert~time,data=dat,type=c("p","r"), main = "All Nights: Time vs. Fertilization", ylab="Fertilization", xlab="Time (Hours) Between Spawning and Crosses")
+m <- lm(fert~time,data=dat)
+anova(m)
+```
+```{r}
+summary(m)
+```
+
+
+
+2. Age vs. Fert - average fertilization rates and Square and Square root Corrected 
+
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/2019night1sq.csv")
+xyplot(fert_sq~time,data=dat,type=c("p","r"), main = "2019 Night 1: Time vs. Fert - SQ corrected avg (n=3)", xlab="Time Ova Added to Sperm", ylab="Fert Avg (n=3): Square Corrected") 
+m <- lm(fert_sq~time,data=dat)
+summary(m)
+anova(m)
+```
+
+
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/2019night2sq.csv")
+xyplot(fert_sq~time,data=dat,type=c("p","r"), main = "2019 Night 2: Time vs. Fert - SQ corrected avg (n=3)", xlab="Time Ova Added to Sperm", ylab="Fert Avg (n=3): Square Corrected")
+m <- lm(fert_sq~time,data=dat)
+summary(m)
+anova(m)
+```
+
+
+
+
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/2022night1sqrt.csv")
+xyplot(fert_sqrt~time,data=dat,type=c("p","r"), main = "2022 Night 1: Time vs. Fert - Square Root Corrected Avg (n=3)", xlab="Time Ova Added to Sperm", ylab="Fert Avg (n=3): Sqrt Corrected")
+m <- lm(fert_sqrt~time,data=dat)
+summary(m)
+anova(m)
+```
+
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/2022night2sqrt.csv")
+xyplot(fert_sqrt~time,data=dat,type=c("p","r"), main = "2022 Night 2: Time vs. Fert - Square Root Corrected Avg (n=3)", xlab="Time Ova Added to Sperm", ylab="Fert Avg (n=3): Sqrt Corrected")
+m <- lm(fert_sqrt~time,data=dat)
+summary(m)
+anova(m)
+```
+
+
+3. Mixed effects of age, directionality, and genetic relatedness 
+
+
+
+
+2. night 1 
+
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/2019night1sq.csv")
+dat$parent1 <- unlist(lapply(strsplit(dat$cross,"-"),"[[",1))
+dat$parent2 <- unlist(lapply(strsplit(dat$cross,"-"),"[[",2))
+xyplot(fert_sq~time*lynchli,data=dat,type=c("p","r"))
+m <- lm(fert_sq~time*lynchli,data=dat)
+summary(m)
+anova(m)
+```
+
+
+```{r}
+model <- lm(fert_sq ~ homog, data = dat)
+summary(model)
+```
+
+
+
+
+Parent 1 (sperm) effects 
+
+```{r}
+plot(x=dat$homog,y=dat$fert_sq,type="n")
+unique1 <- unique(dat$parent1)
+stats <- c()
+for(i in 1:4)
+{
+  tmp <- dat[dat$parent1==unique1[i],]
+  m <- lm(fert_sq~homog,data=tmp)
+  abline(m)
+  stats <- rbind(stats,data.frame(parent1=unique1[i],n=dim(tmp)[1],slope=summary(m)$coefficients[2],r2=round(summary(m)$r.squared,3),p=round(anova(m)$"Pr(>F)"[1],3)))
+}
+stats$signif=ifelse(stats$p<0.05,"*","")
+print(stats)
+```
+
+
+parent 2 (ova) effects
+
+```{r}
+plot(x=dat$homog,y=dat$fert_sq,type="n")
+unique2 <- unique(dat$parent2)
+stats2 <- c()
+for(i in 1:4)
+{
+  tmp <- dat[dat$parent2==unique1[i],]
+  m <- lm(fert_sq~homog,data=tmp)
+  abline(m)
+  stats2 <- rbind(stats2,data.frame(parent2=unique1[i],n=dim(tmp)[1],slope=summary(m)$coefficients[2],r2=round(summary(m)$r.squared,3),p=round(anova(m)$"Pr(>F)"[1],3)))
+}
+stats2$signif=ifelse(stats2$p<0.05,"*","")
+print(stats2)
+```
+
+
+2019 night 2
+
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/2019night2sq.csv")
+dat$parent1 <- unlist(lapply(strsplit(dat$cross,"-"),"[[",1))
+dat$parent2 <- unlist(lapply(strsplit(dat$cross,"-"),"[[",2))
+xyplot(fert_sq~lynchli*time,data=dat,type=c("p","r"))
+m <- lm(fert_sq~lynchli*time,data=dat)
+summary(m)
+anova(m)
+```
+Residual standard error
+```{r}
+sigma(m)/mean(dat$fert_sq)
+```
+
+Parent 1 effects 
+
+```{r}
+plot(x=dat$homog,y=dat$fert_sq,type="n")
+unique1 <- unique(dat$parent1)
+stats <- c()
+for(i in 1:8)
+{
+  tmp <- dat[dat$parent1==unique1[i],]
+  m <- lm(fert_sq~homog,data=tmp)
+  abline(m)
+  stats <- rbind(stats,data.frame(parent1=unique1[i],n=dim(tmp)[1],slope=summary(m)$coefficients[2],r2=round(summary(m)$r.squared,3),p=round(anova(m)$"Pr(>F)"[1],3)))
+}
+stats$signif=ifelse(stats$p<0.05,"*","")
+print(stats)
+```
+ 
+
+
+## Parent 2 effects that are significant all have positive slopes
+
+```{r}
+plot(x=dat$homog,y=dat$fert_sq,type="n")
+unique2 <- unique(dat$parent2)
+stats2 <- c()
+for(i in 1:8)
+{
+  tmp <- dat[dat$parent2==unique1[i],]
+  m <- lm(fert_sq~homog,data=tmp)
+  abline(m)
+  stats2 <- rbind(stats2,data.frame(parent2=unique1[i],n=dim(tmp)[1],slope=summary(m)$coefficients[2],r2=round(summary(m)$r.squared,3),p=round(anova(m)$"Pr(>F)"[1],3)))
+}
+stats2$signif=ifelse(stats2$p<0.05,"*","")
+print(stats2)
+```
+
+
+
+Parent 1 effect overall 
+
+```{r}
+  tmp <- dat[dat$parent1==unique1[i],]
+  m <- lm(fert_sq~homog,data=tmp)
+  anova(m)
+```
+
+parent 2 effect...
+
+```{r}
+  tmp <- dat[dat$parent2==unique1[i],]
+  m <- lm(fert_sq~homog,data=tmp)
+  anova(m)
+```
+
+
+
+4. Average - night 1
+
+```{r}
+dat <- read.csv("C:/Users/parsonsee/Desktop/night.1.csv")
+mean.fert <- tapply(dat$fert,dat$cross,mean)
+dat$parent1 <- unlist(lapply(strsplit(dat$cross,"-"),"[[",1))
+dat$parent2 <- unlist(lapply(strsplit(dat$cross,"-"),"[[",2))
+prov_R <- dat$prov_R[match(names(mean.fert),dat$cross)]
+xyplot(mean.fert~prov_R,type=c("p","r"))
+m <- lm(mean.fert~prov_R)
+anova(m)
+cor.test(x=mean.fert,y=prov_R,method="kendall")
+```
+
+
+Night 1 parental affects
+
+
+
+## Parent 1 had a signigicant negatice slope for genet U50 
+
+```{r}
+plot(x=dat$prov_R,y=dat$fert,type="n")
+unique1 <- unique(dat$parent1)
+stats <- c()
+for(i in 1:4)
+{
+  tmp <- dat[dat$parent1==unique1[i],]
+  m <- lm(fert~prov_R,data=tmp)
+  abline(m)
+  stats <- rbind(stats,data.frame(parent1=unique1[i],n=dim(tmp)[1],slope=summary(m)$coefficients[2],r2=round(summary(m)$r.squared,3),p=round(anova(m)$"Pr(>F)"[1],3)))
+}
+stats$signif=ifelse(stats$p<0.05,"*","")
+print(stats)
+```
+
+
+
+## Parent 2 - none are significant by themselves? 
+
+```{r}
+plot(x=dat$prov_R,y=dat$fert,type="n")
+unique2 <- unique(dat$parent2)
+stats2 <- c()
+for(i in 1:4)
+{
+  tmp <- dat[dat$parent2==unique1[i],]
+  m <- lm(fert~prov_R,data=tmp)
+  abline(m)
+  stats2 <- rbind(stats2,data.frame(parent2=unique1[i],n=dim(tmp)[1],slope=summary(m)$coefficients[2],r2=round(summary(m)$r.squared,3),p=round(anova(m)$"Pr(>F)"[1],3)))
+}
+stats2$signif=ifelse(stats2$p<0.05,"*","")
+print(stats2)
+```
+
+
+Parent 1 effect overall 
+
+```{r}
+  tmp <- dat[dat$parent1==unique1[i],]
+  m <- lm(fert~prov_R,data=tmp)
+  anova(m)
+```
+
+parent 2 effect...
+
+```{r}
+  tmp <- dat[dat$parent2==unique1[i],]
+  m <- lm(fert~prov_R,data=tmp)
+  anova(m)
+```
+
+## When you ombine these parent1 or parent 2 effects, only 1 slope is significant - shows negative relationship.
+
+```{r}
+plot(x=dat$prov_R,y=dat$fert,type="n")
+unique1 <- unique(dat$parent1)
+stats3 <- c()
+for(i in 1:4)
+{
+  tmp <- dat[dat$parent1==unique1[i] | dat$parent2==unique1[i],]
+  m <- lm(fert~prov_R,data=tmp)
+  abline(m)
+  stats3 <- rbind(stats3,data.frame(parent=unique1[i],n=dim(tmp)[1],slope=summary(m)$coefficients[2],r2=round(summary(m)$r.squared,3),p=round(anova(m)$"Pr(>F)"[1],3)))
+  
+}
+stats3$signif=ifelse(stats3$p<0.05,"*","")
+print(stats3)
+```
+
+
+
+
+
+5. Average - night 2 
+
+
+```{r}
+dat <- read.csv("C:/Users/parsonsee/Desktop/night.2.csv")
+mean.fert <- tapply(dat$fert,dat$cross,mean)
+dat$parent1 <- unlist(lapply(strsplit(dat$cross,"-"),"[[",1))
+dat$parent2 <- unlist(lapply(strsplit(dat$cross,"-"),"[[",2))
+prov_R <- dat$prov_R[match(names(mean.fert),dat$cross)]
+xyplot(mean.fert~prov_R,type=c("p","r"))
+m <- lm(mean.fert~prov_R)
+anova(m)
+cor.test(x=mean.fert,y=prov_R,method="kendall")
+```
+
+
+All nights Average 
+
+```{r}
+library(lattice)
+rm(list=ls())
+dat <- read.csv("C:/Users/parsonsee/Desktop/all_time.csv")
+xyplot(Fert~Time,data=dat,type=c("p","r"), main = "Time vs. Fert - All Nights", xlab="Time between Spawn and Cross", ylab="Overall Fertilization Average")
+m <- lm(Fert~Time,data=dat)
+summary(m)
+anova(m)
+```
+
+
